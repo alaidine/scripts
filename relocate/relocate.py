@@ -1,6 +1,7 @@
 #!/bin/python
 
 import time
+import shutil
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -27,13 +28,18 @@ class Watcher:
 class Handler(FileSystemEventHandler):
     @staticmethod
     def on_any_event(event):
+        HOME = "/home/alaidine"
+        filename = event.src_path[2:]
+
         if event.is_directory:
             return None
 
         elif event.event_type == 'created':
             # Take any action here when a file is first created.
             print("Received created event - %s." % event.src_path)
-            print("Relocating file.")
+            if filename[-4:] == ".jpg":
+                print(f"Moved {filename} to the ~/Pictures directory.")
+                shutil.move(f"./{filename}",f"{HOME}/Pictures/{filename}")
 
         elif event.event_type == 'modified':
             # Taken any action here when a file is modified.
